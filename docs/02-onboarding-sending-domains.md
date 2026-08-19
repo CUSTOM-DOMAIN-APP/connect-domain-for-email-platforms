@@ -6,7 +6,7 @@ The moment a customer of an email platform meets DNS is the moment your activati
 
 A new customer's journey is smooth right up to the point where value should appear: import contacts, design a template, write a campaign, and then a screen that says **"Authenticate your domain to start sending."** Behind that screen are four to six DNS records, a console the customer may not have logged into for years, and possibly a domain managed by an agency or an IT contractor who is not in the room.
 
-The Domain Connect Association's knowledge base (published under CC0) quantifies the general pattern: multi-record DNS setups documented across a dozen or more registrar specific help pages, with roughly half of users who attempt manual DNS configuration failing and abandoning. There is no reason to believe email platform customers do better. If anything the stakes are higher, because a partially completed email setup does not fail loudly. It sends, lands in spam, and quietly convinces the customer your platform "has bad deliverability."
+The Domain Connect project's knowledge base ([github.com/Domain-Connect/knowledge-base](https://github.com/Domain-Connect/knowledge-base), published under CC0 1.0) quantifies the general pattern using Microsoft 365: 7 to 15 records, 16 help sites maintained by Microsoft with 10 of them registrar specific, and "approximately 50% of users who attempt manual DNS configuration fail and abandon the process" (`Knowledge Base/01_Problem_and_Context.md`). There is no reason to believe email platform customers do better. If anything the stakes are higher, because a partially completed email setup does not fail loudly. It sends, lands in spam, and quietly convinces the customer your platform "has bad deliverability."
 
 Every customer who stalls here is a customer who never sends a campaign, never sees an open rate, and never develops a reason to pay.
 
@@ -35,7 +35,7 @@ DNS setup tickets are not random. The same failure modes recur, and most are ind
 | Trailing dot confusion | Provider requires (or forbids) the trailing dot on CNAME targets | Record saved, resolves wrong |
 | Stale verify button | Customer fixed the record, your check ran before caches expired | "Your tool is broken," then an abandoned session |
 
-Each row is a ticket that takes half an hour, needs screenshots, and teaches the customer that email is hard on your platform. Multiply by 63 provider consoles, each with its own vocabulary, and the support cost compounds.
+Each row is a ticket that takes half an hour, needs screenshots, and teaches the customer that email is hard on your platform. Multiply by the 63 provider consoles in the [live census](https://api.customdomain.ai/v1/providers/census), each with its own vocabulary, and the support cost compounds.
 
 ## Verification UX that works
 
@@ -64,4 +64,4 @@ Instrument the funnel like any other activation step:
 - **Tickets per 100 connections**: the honest measure of instruction quality.
 - **Drop-off point**: which record, and which provider, kills the most sessions. This tells you exactly which provider integration or instruction set to fix next.
 
-Platforms that move from static instructions to automated connection see the entire failure table above collapse into the automated path. How that automation works mechanically, from provider detection to SPF merging to webhooks, is the subject of [the next deep dive](04-automating-domain-setup-for-email.md), and the managed version of it is what [Custom Domain](https://customdomain.ai) provides.
+Platforms that move from static instructions to automated connection see the entire failure table above collapse into the automated path. How that automation works mechanically, from provider detection to SPF merging to webhooks, is the subject of [the next deep dive](04-automating-domain-setup-for-email.md), and the managed version of it is what [CustomDomain](https://customdomain.ai) provides.

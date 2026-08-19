@@ -19,6 +19,8 @@ example.com.  TXT  "v=spf1 include:spf.yourplatform.example ~all"
 
 Because customers usually already have an SPF record, your instructions (or your automation) must **merge** the new mechanism into the existing record, never create a second one. This single rule prevents one of the most damaging setup mistakes in email.
 
+The Domain Connect protocol has a record type for exactly this, `SPFM`, which extends an existing SPF record instead of writing a second one. CustomDomain's published template [`customdomain.ai.email-spf.json`](https://github.com/Domain-Connect/Templates) uses it, so the merge is performed by the DNS provider at apply time rather than by the customer in a text field.
+
 ## DKIM: cryptographic proof the message was not altered
 
 DKIM (RFC 6376) signs each message with a private key you hold; receivers fetch the matching public key from DNS at `<selector>._domainkey.<domain>`. The signature proves the message body and key headers were not modified in transit and binds the message to the signing domain, the `d=` value in the signature.
@@ -103,4 +105,4 @@ For an email platform, BIMI is a useful carrot: it gives customers a visible rew
 | Tracking | `click` | CNAME (+ TLS) | Broken or warning-laden links in every email |
 | BIMI | `default._bimi` | TXT | No logo shown |
 
-All of these records can be written automatically with the customer's consent instead of being copy-pasted: see [automating domain setup for email](04-automating-domain-setup-for-email.md) and the [Custom Domain docs](https://app.customdomain.ai/docs).
+All of these records can be written automatically with the customer's consent instead of being copy-pasted: see [automating domain setup for email](04-automating-domain-setup-for-email.md) and the [CustomDomain docs](https://docs.customdomain.ai/docs).
