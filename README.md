@@ -1,11 +1,13 @@
-# Custom Domain for Email Platforms
+# CustomDomain™ for Email Platforms
 
-Connect custom email domains to your email platform — automated SPF, DKIM, DMARC and MX setup
+Connect custom email domains to your email platform: automated SPF, DKIM, DMARC and MX setup.
 
-**Status:** Maintained guide · every number re-verified against the live API on 2026-09-04 · public
+**Status:** Maintained guide · live API numbers re-verified on 2026-09-26 · public
 
 [![docs](https://img.shields.io/badge/docs-docs.customdomain.ai-1c1917?style=flat)](https://docs.customdomain.ai/docs)
 [![license](https://img.shields.io/badge/license-MIT-1c1917?style=flat)](./LICENSE)
+
+[Website](https://customdomain.ai) · [Docs](https://docs.customdomain.ai/docs) · [Console](https://app.customdomain.ai) · [Email DNS docs](https://docs.customdomain.ai/docs/dns/email-dns) · [MCP server](https://customdomain.ai/mcp-server)
 
 |  |  |
 |---|---|
@@ -13,12 +15,12 @@ Connect custom email domains to your email platform — automated SPF, DKIM, DMA
 | **Who it's for** | Built for marketing, transactional and outbound messaging platforms |
 | **Live at** | docs at [docs.customdomain.ai](https://docs.customdomain.ai/docs) · product at [customdomain.ai](https://customdomain.ai) |
 | **Stack** | Markdown guide · REST API, OpenAPI 3.1 · hosted MCP server · Domain Connect templates |
-| **Status** | Maintained · 63 providers and 5 plans re-counted from the live API 2026-09-04 |
+| **Status** | Maintained · 63 providers and 5 plans re-counted from the live API 2026-09-26 |
 
 Every email platform hits the same onboarding wall: before a customer's mail is worth delivering, they have to
 publish SPF, DKIM and DMARC records in a DNS console you do not operate. This repository covers which records
 email authentication actually requires, why customers stall, and how to automate the whole set down to one
-click. Maintained by [Custom Domain](https://customdomain.ai); the guidance stands whether or not you use the
+click. Maintained by [CustomDomain™](https://customdomain.ai); the guidance stands whether or not you use the
 product.
 
 ## The problem: your activation funnel runs through someone else's DNS console
@@ -80,7 +82,7 @@ A tracking subdomain needs a real certificate, renewed forever, or every link in
 warning.
 
 Getting those records into the customer's zone reduces to three rails. The split below is the live census at
-`GET https://api.customdomain.ai/v1/providers/census`, counted 2026-09-04.
+`GET https://api.customdomain.ai/v1/providers/census`, counted 2026-09-26.
 
 | Rail | Providers (of 63) | What the customer does |
 |---|---|---|
@@ -120,15 +122,15 @@ end up writing one.
 └── LICENSE          # MIT
 ```
 
-Markdown only, no build step. Surfaces referenced from here: REST at `api.customdomain.ai` (OpenAPI 3.1: 67
-paths, 79 operations, counted 2026-09-04), the widget published as `customdomain-js` on npm, and MCP at
+Markdown only, no build step. Surfaces referenced from here: REST at `api.customdomain.ai` (OpenAPI 3.1: 68
+paths, 80 operations, counted 2026-09-26), the widget published as `customdomain-js` on npm, and MCP at
 `mcp.customdomain.ai/mcp` (registry id `ai.customdomain/mcp`).
 
 ## Pricing, and where this loses
 
-Read from `GET https://api.customdomain.ai/v1/plans` on 2026-09-04. Entri prices read 2026-08-19.
+Read from `GET https://api.customdomain.ai/v1/plans` on 2026-09-26. Entri prices read 2026-08-19.
 
-| | Custom Domain | Entri |
+| | CustomDomain™ | Entri |
 |---|---|---|
 | Free tier | $0, 10 connections/yr, hard capped | none published |
 | Entry paid tier | Startup, $149/mo, 600/yr | Startup, $249/mo, 600/yr |
@@ -153,14 +155,29 @@ Every number here traces to a live endpoint or a public repository, named at the
 that is a bug: open an issue with the file and line, and see [CONTRIBUTING.md](./CONTRIBUTING.md) for the
 sourcing table.
 
-Sibling guides: [for agencies](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-agencies) · [for AI
-agents](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-ai-agents) · [for website
-builders](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-website-builders) ·
-[awesome-custom-domains](https://github.com/CUSTOM-DOMAIN-APP/awesome-custom-domains), which lists the
-alternatives to this one. Problem framing draws on the [Domain Connect knowledge
-base](https://github.com/Domain-Connect/knowledge-base) (CC0 1.0), an open standard maintained by a community
-across multiple companies and referenced here as prior art.
+Problem framing draws on the [Domain Connect knowledge base](https://github.com/Domain-Connect/knowledge-base)
+(CC0 1.0), an open standard maintained by a community across multiple companies and referenced here as prior
+art.
+
+## Related
+
+- [connect-domain-for-agencies](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-agencies): CustomDomain™ for Agencies
+- [connect-domain-for-ai-agents](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-ai-agents): CustomDomain™ for AI Agents
+- [connect-domain-for-website-builders](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-website-builders): CustomDomain™ for Website Builders
+- [customdomain-sdk](https://github.com/CUSTOM-DOMAIN-APP/customdomain-sdk): the browser SDK `customdomain-js` and the React wrapper `@customdomain/react`
+- [customdomain-mcp](https://github.com/CUSTOM-DOMAIN-APP/customdomain-mcp): the hosted MCP server, including the `add-email` tool
+- [docs](https://github.com/CUSTOM-DOMAIN-APP/docs): the CustomDomain™ documentation source, rendered at [docs.customdomain.ai](https://docs.customdomain.ai/docs)
+- [awesome-custom-domains](https://github.com/CUSTOM-DOMAIN-APP/awesome-custom-domains): the curated list of the category, including the alternatives to this product
+
+## Support
+
+- **Docs:** [docs.customdomain.ai](https://docs.customdomain.ai/docs)
+- **Questions and ideas:** [GitHub Discussions](https://github.com/CUSTOM-DOMAIN-APP/docs/discussions)
+- **Bugs and corrections:** [open an issue](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-email-platforms/issues) on this repository
+- **Service status:** [status.customdomain.ai](https://status.customdomain.ai)
+- **Account and billing:** connect@customdomain.ai
+- **Security:** report privately to security@customdomain.ai, never in a public issue. Policy: [app.customdomain.ai/security](https://app.customdomain.ai/security)
 
 ## License
 
-[MIT](./LICENSE) © CustomDomain.ai, a product of EverJust Company.
+[MIT](./LICENSE). CustomDomain™ is a product of EverJust Company.

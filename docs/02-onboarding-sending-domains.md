@@ -64,4 +64,4 @@ Instrument the funnel like any other activation step:
 - **Tickets per 100 connections**: the honest measure of instruction quality.
 - **Drop-off point**: which record, and which provider, kills the most sessions. This tells you exactly which provider integration or instruction set to fix next.
 
-Platforms that move from static instructions to automated connection see the entire failure table above collapse into the automated path. How that automation works mechanically, from provider detection to SPF merging to webhooks, is the subject of [the next deep dive](04-automating-domain-setup-for-email.md), and the managed version of it is what [CustomDomain](https://customdomain.ai) provides.
+Platforms that move from static instructions to automated connection see the entire failure table above collapse into the automated path. How that automation works mechanically, from provider detection to SPF merging to webhooks, is the subject of [the next deep dive](04-automating-domain-setup-for-email.md), and the managed version of it is what [CustomDomain™](https://customdomain.ai) provides.
