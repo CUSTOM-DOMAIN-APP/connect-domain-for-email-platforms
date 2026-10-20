@@ -6,7 +6,7 @@ Instructions for AI coding agents working with this repository or implementing c
 
 CustomDomain™ (customdomain.ai) is managed infrastructure that lets a platform's users connect their own domain in one click: automatic DNS configuration, propagation verification against public DNS, and automatic SSL/TLS issuance and renewal. There is no separate ownership challenge. Control of the zone is proven by the rail used to write the records (a provider OAuth authorization, a provider-hosted one-click apply, or a scoped API token); on the manual rail the poller simply waits for the records to appear.
 
-63 DNS and registrar providers are catalogued. Exactly 25 have an automatic path (6 provider OAuth, 17 API token, 2 provider-hosted Domain Connect) and the remaining 38 use a guided manual flow with automatic verification. The live tally is `GET https://api.customdomain.ai/v1/providers/census`.
+178 DNS and registrar providers are catalogued. Exactly 62 have an automatic path (6 provider OAuth, 55 API token, 1 provider-hosted Domain Connect) and the remaining 116 use a guided manual flow with automatic verification. The live tally is `GET https://api.customdomain.ai/v1/providers/census`.
 
 ## Connect a domain in 3 steps (REST)
 
@@ -38,7 +38,7 @@ Endpoint shapes are illustrative; always follow https://docs.customdomain.ai/doc
 
 ## MCP server (for agents)
 
-Hosted MCP endpoint: `https://mcp.customdomain.ai/mcp` (streamable HTTP, OAuth client credentials via `https://mcp.customdomain.ai/token`). Server `customdomain-mcp` version 0.4.0, protocol revision `2025-06-18`. Twelve tools: search and register domains, create, re-apply and disconnect connections, detect the DNS provider, configure email DNS and forwarding, inventory connections, and check connection and order status. No tool accepts raw DNS records as input; record values are computed by the control plane from vetted templates, which closes off prompt injection paths that end in arbitrary DNS writes.
+Hosted MCP endpoint: `https://mcp.customdomain.ai/mcp` (streamable HTTP; an API key, OAuth client credentials via `https://mcp.customdomain.ai/token`, or a delegated agent token a person approves over OAuth at `https://api.customdomain.ai`). Server `customdomain-mcp` version 0.5.0, protocol revision `2025-06-18`. Seventeen tools: search domains and suggest names, register them (off on the hosted service), create, re-apply, recheck and disconnect connections, detect the DNS provider, diagnose a connection record by record, read its certificate, configure email DNS and forwarding, inventory connections and orders, check billing standing, and check connection and order status. No tool accepts raw DNS records as input; record values are computed by the control plane from vetted templates, which closes off prompt injection paths that end in arbitrary DNS writes.
 
 ```bash
 claude mcp add --transport http customdomain https://mcp.customdomain.ai/mcp
@@ -52,7 +52,7 @@ Source: https://github.com/CUSTOM-DOMAIN-APP/customdomain-mcp
 - Product: https://customdomain.ai
 - Documentation: https://docs.customdomain.ai/docs (agent index: https://docs.customdomain.ai/docs/llms.txt)
 - Embeddable widget: https://customdomain.ai/connect-domain-widget
-- Sign up (free tier): https://app.customdomain.ai/signup
+- Sign up (no card needed; every workspace has a default API key and its first ten domains are free): https://app.customdomain.ai/signup
 - Questions this file does not answer: connect@customdomain.ai
 
 ## Conventions for edits in this repo

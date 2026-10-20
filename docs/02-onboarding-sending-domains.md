@@ -35,7 +35,7 @@ DNS setup tickets are not random. The same failure modes recur, and most are ind
 | Trailing dot confusion | Provider requires (or forbids) the trailing dot on CNAME targets | Record saved, resolves wrong |
 | Stale verify button | Customer fixed the record, your check ran before caches expired | "Your tool is broken," then an abandoned session |
 
-Each row is a ticket that takes half an hour, needs screenshots, and teaches the customer that email is hard on your platform. Multiply by the 63 provider consoles in the [live census](https://api.customdomain.ai/v1/providers/census), each with its own vocabulary, and the support cost compounds.
+Each row is a ticket that takes half an hour, needs screenshots, and teaches the customer that email is hard on your platform. Multiply by the 178 provider consoles in the [live census](https://api.customdomain.ai/v1/providers/census), each with its own vocabulary, and the support cost compounds.
 
 ## Verification UX that works
 

@@ -8,7 +8,7 @@ Every number and every capability claim here has a source, and the source is che
 
 | Claim | Source |
 |---|---|
-| Provider counts (63 catalogued, 25 automatic, 38 guided manual) | `GET https://api.customdomain.ai/v1/providers/census` |
+| Provider counts (178 catalogued, 62 automatic, 116 guided manual) | `GET https://api.customdomain.ai/v1/providers/census` |
 | Plan names and prices | `GET https://api.customdomain.ai/v1/plans`; [customdomain.ai/pricing](https://customdomain.ai/pricing) is the human-readable page, and where the two disagree the endpoint wins |
 | API request and response shapes | [api.customdomain.ai/v1/openapi.json](https://api.customdomain.ai/v1/openapi.json) and [docs.customdomain.ai](https://docs.customdomain.ai/docs) |
 | Connection statuses and timeouts | [docs.customdomain.ai/docs/concepts/connections](https://docs.customdomain.ai/docs/concepts/connections) |
