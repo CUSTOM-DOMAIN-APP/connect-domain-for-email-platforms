@@ -1,8 +1,9 @@
-# CustomDomain™ for Email Platforms
+# Custom sending domains for email platforms: the CustomDomain™ field guide
 
-Connect custom email domains to your email platform: automated SPF, DKIM, DMARC and MX setup.
+Custom sending domains for email platforms: SPF, DKIM, DMARC, return-path and MX records for Amazon SES,
+SendGrid, Postmark and Resend, and how to get them into a customer's DNS automatically.
 
-**Status:** Maintained guide · live API numbers re-verified on 2026-09-26 · public
+**Status:** Maintained guide · live API numbers re-verified on 2026-10-20 · public
 
 [![docs](https://img.shields.io/badge/docs-docs.customdomain.ai-1c1917?style=flat)](https://docs.customdomain.ai/docs)
 [![license](https://img.shields.io/badge/license-MIT-1c1917?style=flat)](./LICENSE)
@@ -15,7 +16,7 @@ Connect custom email domains to your email platform: automated SPF, DKIM, DMARC 
 | **Who it's for** | Built for marketing, transactional and outbound messaging platforms |
 | **Live at** | docs at [docs.customdomain.ai](https://docs.customdomain.ai/docs) · product at [customdomain.ai](https://customdomain.ai) |
 | **Stack** | Markdown guide · REST API, OpenAPI 3.1 · hosted MCP server · Domain Connect templates |
-| **Status** | Maintained · 63 providers and 5 plans re-counted from the live API 2026-09-26 |
+| **Status** | Maintained · 178 providers and 5 plans re-counted from the live API 2026-10-20 |
 
 Every email platform hits the same onboarding wall: before a customer's mail is worth delivering, they have to
 publish SPF, DKIM and DMARC records in a DNS console you do not operate. This repository covers which records
@@ -62,8 +63,9 @@ curl -X PUT https://api.customdomain.ai/v1/connections/con_.../records \
 ```
 
 Read `provider_id` and `setup_type` before rendering anything, so your screen says "your DNS is at Cloudflare"
-rather than showing a generic record table. Then subscribe to `connection.live` rather than polling. Free-tier
-keys: [app.customdomain.ai/signup](https://app.customdomain.ai/signup).
+rather than showing a generic record table. Then subscribe to `connection.live` rather than polling. Sign up at
+[app.customdomain.ai/signup](https://app.customdomain.ai/signup); every workspace has a default API key on its
+**API & SDK** page.
 
 ## What it does
 
@@ -82,18 +84,44 @@ A tracking subdomain needs a real certificate, renewed forever, or every link in
 warning.
 
 Getting those records into the customer's zone reduces to three rails. The split below is the live census at
-`GET https://api.customdomain.ai/v1/providers/census`, counted 2026-09-26.
+`GET https://api.customdomain.ai/v1/providers/census`, counted 2026-10-20.
 
-| Rail | Providers (of 63) | What the customer does |
+| Rail | Providers (of 178) | What the customer does |
 |---|---|---|
-| One-click provider authorization | 8 (6 provider OAuth, 2 provider-hosted Domain Connect) | Approves a scoped change set at their own provider |
-| Scoped API token | 17 | Pastes one zone-scoped token |
-| Guided manual with automatic verification | 38 | Copies provider-shaped values; verification is automatic |
+| One-click provider authorization | 7 (6 provider OAuth, 1 provider-hosted Domain Connect) | Approves a scoped change set at their own provider |
+| Scoped API token | 55 | Pastes one zone-scoped token |
+| Guided manual with automatic verification | 116 | Copies provider-shaped values; verification is automatic |
 
 Control is proven by whichever rail wrote the records, so there is no separate ownership challenge and no TXT
 token to keep alive. Verification is continuous, not a one-time gate: records that verified once disappear
-during a site migration months later. If you see "63 auto-configured" anywhere, including on our own marketing
+during a site migration months later. If you see "178 auto-configured" anywhere, including on our own marketing
 pages, it is wrong.
+
+## DNS records for Amazon SES, SendGrid, Postmark and Resend
+
+These are the sending services platforms most often put behind a customer's domain. Each one mints its own
+values per domain (tokens, selectors, public keys), so the rows below are shapes, not values to copy: your
+platform reads the real values from the service's API or dashboard and gets them into the customer's zone.
+Checked against each vendor's documentation on 2026-10-20.
+
+| Service | DKIM | SPF and return path | Worth knowing |
+|---|---|---|---|
+| [Amazon SES](https://docs.aws.amazon.com/ses/latest/dg/send-email-authentication-dkim-easy.html) | Easy DKIM: three `CNAME`s, `<token>._domainkey` to `<token>.dkim.amazonses.com` | A [custom MAIL FROM](https://docs.aws.amazon.com/ses/latest/dg/mail-from.html) subdomain with one `MX`, `10 feedback-smtp.<region>.amazonses.com`, and a `TXT`, `"v=spf1 include:amazonses.com ~all"` | Without a custom MAIL FROM, SPF passes for `amazonses.com` and DMARC has to align through DKIM. The MAIL FROM subdomain must hold exactly one `MX` |
+| [SendGrid](https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication) | `CNAME`s `s1._domainkey` and `s2._domainkey` to `s1.domainkey.u<id>.wl<id>.sendgrid.net` and its `s2` twin | `CNAME` `em<id>` to `u<id>.wl<id>.sendgrid.net` | That is the default automated security setup, where SendGrid keeps the keys behind the `CNAME`s current. With it off you get an `MX` and three `TXT` records to maintain yourself |
+| [Postmark](https://postmarkapp.com/support/article/how-do-i-verify-a-domain) | A `TXT` at the selector Postmark shows under `_domainkey` | A Return-Path `CNAME`, at the hostname Postmark shows, to `pm.mtasv.net` | No SPF record to add: the custom Return-Path is what makes SPF pass and align |
+| [Resend](https://resend.com/docs/add-a-domain) | A `TXT` at `resend._domainkey`, value starting `p=` | On the `send` subdomain: `MX` `10 feedback-smtp.<region>.amazonses.com` and `TXT` `"v=spf1 include:amazonses.com ~all"` | Receiving mail is a separate, optional `MX` |
+
+All four also document a DMARC record at `_dmarc`. Start at `p=none` with a `rua` address, read the reports,
+then tighten. The record-by-record reasoning is in [docs/01](docs/01-email-authentication-records.md).
+
+**Where CustomDomain™ fits.** None of these values can be derived from the domain, which is why
+`PUT /v1/connections/{id}/records` exists (the Quickstart above uses it). Create the connection, `PUT` the
+records the sending service returned (an API key on your server, hosts relative to the connection, at most 25),
+and CustomDomain™ writes them with the customer's provider credential where a rail can, shows them for manual
+setup where it cannot, and verifies them in public DNS before the connection goes live. The Domain Connect rail
+refuses a supplied record set, because it can only apply published templates. A customer who already sends
+through another service keeps one valid SPF record, because SPF is merged rather than replaced by default
+(`override_spf` is `false`).
 
 ## The email surface: templates, SPF merge, and the API
 
@@ -107,7 +135,7 @@ break authentication for all of the domain's mail, including mail that has nothi
 Merge is the default in the API too: `POST /v1/connections` takes `override_spf` (default `false`), and the flag
 exists to opt *out*. The same call takes `validate_dmarc` to fold DMARC into verification and `validate_caa` to
 check CAA before certificate issuance. On the hosted MCP server, `add-email` configures a domain for a mail
-provider in one call. None of the twelve MCP tools accepts a raw DNS record, so a prompt-injected agent cannot
+provider in one call. None of the seventeen MCP tools accepts a raw DNS record, so a prompt-injected agent cannot
 end up writing one.
 
 ## Repository layout
@@ -122,32 +150,33 @@ end up writing one.
 └── LICENSE          # MIT
 ```
 
-Markdown only, no build step. Surfaces referenced from here: REST at `api.customdomain.ai` (OpenAPI 3.1: 68
-paths, 80 operations, counted 2026-09-26), the widget published as `customdomain-js` on npm, and MCP at
+Markdown only, no build step. Surfaces referenced from here: REST at `api.customdomain.ai` (OpenAPI 3.1: 129
+paths, 152 operations, counted 2026-10-20), the widget published as `customdomain-js` on npm, and MCP at
 `mcp.customdomain.ai/mcp` (registry id `ai.customdomain/mcp`).
 
 ## Pricing, and where this loses
 
-Read from `GET https://api.customdomain.ai/v1/plans` on 2026-09-26. Entri prices read 2026-08-19.
+Read from `GET https://api.customdomain.ai/v1/plans` on 2026-10-20. Entri prices read 2026-08-19.
 
 | | CustomDomain™ | Entri |
 |---|---|---|
-| Free tier | $0, 10 connections/yr, hard capped | none published |
-| Entry paid tier | Startup, $149/mo, 600/yr | Startup, $249/mo, 600/yr |
+| Entry tier | Starter, $10/mo, 10 connections/yr, hard capped | none published |
+| 600 connections a year | Startup, $149/mo, 600/yr | Startup, $249/mo, 600/yr |
 | Next tier | Growth, $649/mo, 600/yr plus metered overage | Growth, "Talk to Sales", 2,400/yr |
 | Top tiers | Premium and Enterprise, contact sales, 12,000/yr | Premium and Enterprise, "Talk to Sales" |
 
-Email templates and the `add-email` tool sit on the `Connect` entitlement, which every plan including Free has;
+The self-serve plans start with a 14 day free trial, and a new workspace connects its first ten domains without a
+card. Email templates and the `add-email` tool sit on the `Connect` entitlement, which every plan has;
 Entri lists "advanced security and email domain setup" from its Premium tier. The entitlements that do start
 higher here are `Secure` (the `/v1/ssl*` surface) and `Power` (the reverse proxy), both first appearing on
 Growth. Automatic TLS on a connected host is part of the base flow, not one of those.
 
 ## Limits and known gaps
 
-- **Provider coverage.** Entri's plans page advertises "70+ DNS providers". The census here lists 63 catalogued, 25 automatic. The two numbers are not measured the same way and we have not audited theirs, so treat neither as a lead.
+- **Provider coverage.** Entri's plans page advertises "70+ DNS providers". The census here lists 178 catalogued, 62 automatic. The two numbers are not measured the same way and we have not audited theirs, so treat neither as a lead.
 - **SSO and SCIM are not built**, and no tier grants them. Entri lists Enterprise SSO with SAML and SCIM. If a security questionnaire requires SAML today, this is not the answer.
 - **Drift alerting is off by default.** The hourly monitor sweep runs and `POST /v1/monitor:check` gives the same comparison synchronously, but `domain.record_missing` and `domain.record_restored` are gated behind a deployment flag the hosted service leaves off. Build on the synchronous check.
-- **Free is for evaluation, not production.** It is the only hard-capped tier: past quota it returns `402 quota_exceeded`, and the annual 10 is metered as 1 per calendar month.
+- **Starter is for evaluation and small volumes.** It is the only hard-capped tier: past quota it returns `402 quota_exceeded`, and the annual 10 is metered as 1 per calendar month.
 
 ## Corrections
 
@@ -161,9 +190,9 @@ art.
 
 ## Related
 
-- [connect-domain-for-agencies](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-agencies): CustomDomain™ for Agencies
-- [connect-domain-for-ai-agents](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-ai-agents): CustomDomain™ for AI Agents
-- [connect-domain-for-website-builders](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-website-builders): CustomDomain™ for Website Builders
+- [connect-domain-for-agencies](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-agencies): custom domains for agencies, the field guide
+- [connect-domain-for-ai-agents](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-ai-agents): custom domains for AI agents, the field guide
+- [connect-domain-for-website-builders](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-website-builders): custom domains for website builders, the field guide
 - [customdomain-sdk](https://github.com/CUSTOM-DOMAIN-APP/customdomain-sdk): the browser SDK `customdomain-js` and the React wrapper `@customdomain/react`
 - [customdomain-mcp](https://github.com/CUSTOM-DOMAIN-APP/customdomain-mcp): the hosted MCP server, including the `add-email` tool
 - [docs](https://github.com/CUSTOM-DOMAIN-APP/docs): the CustomDomain™ documentation source, rendered at [docs.customdomain.ai](https://docs.customdomain.ai/docs)
