@@ -135,7 +135,7 @@ break authentication for all of the domain's mail, including mail that has nothi
 Merge is the default in the API too: `POST /v1/connections` takes `override_spf` (default `false`), and the flag
 exists to opt *out*. The same call takes `validate_dmarc` to fold DMARC into verification and `validate_caa` to
 check CAA before certificate issuance. On the hosted MCP server, `add-email` configures a domain for a mail
-provider in one call. None of the seventeen MCP tools accepts a raw DNS record, so a prompt-injected agent cannot
+provider in one call. None of the twenty MCP tools accepts a raw DNS record, so a prompt-injected agent cannot
 end up writing one.
 
 ## Repository layout
