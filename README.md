@@ -1,28 +1,14 @@
-# Custom sending domains for email platforms: the CustomDomain™ field guide
+# Custom sending domains for email platforms
 
-Custom sending domains for email platforms: SPF, DKIM, DMARC, return-path and MX records for Amazon SES,
-SendGrid, Postmark and Resend, and how to get them into a customer's DNS automatically.
+SPF, DKIM, DMARC, return-path and MX records for Amazon SES, SendGrid, Postmark and Resend, and how to get them
+into a customer's DNS without breaking the mail they already send.
 
-**Status:** Maintained guide · live API numbers re-verified on 2026-10-20 · public
-
-[![docs](https://img.shields.io/badge/docs-docs.customdomain.ai-1c1917?style=flat)](https://docs.customdomain.ai/docs)
-[![license](https://img.shields.io/badge/license-MIT-1c1917?style=flat)](./LICENSE)
-
-[Website](https://customdomain.ai) · [Docs](https://docs.customdomain.ai/docs) · [Console](https://app.customdomain.ai) · [Email DNS docs](https://docs.customdomain.ai/docs/dns/email-dns) · [MCP server](https://customdomain.ai/mcp-server)
-
-|  |  |
-|---|---|
-| **What it is** | Implementation guide to automating sending-domain setup: SPF, DKIM, DMARC, MX |
-| **Who it's for** | Built for marketing, transactional and outbound messaging platforms |
-| **Live at** | docs at [docs.customdomain.ai](https://docs.customdomain.ai/docs) · product at [customdomain.ai](https://customdomain.ai) |
-| **Stack** | Markdown guide · REST API, OpenAPI 3.1 · hosted MCP server · Domain Connect templates |
-| **Status** | Maintained · 178 providers and 5 plans re-counted from the live API 2026-10-20 |
+[Email DNS records in the docs](https://customdomain.ai/gh/email) · [Bring your own records](https://docs.customdomain.ai/docs/dns/bring-your-own-records) · [Start free: first ten domains, no card](https://app.customdomain.ai/signup)
 
 Every email platform hits the same onboarding wall: before a customer's mail is worth delivering, they have to
 publish SPF, DKIM and DMARC records in a DNS console you do not operate. This repository covers which records
-email authentication actually requires, why customers stall, and how to automate the whole set down to one
-click. Maintained by [CustomDomain™](https://customdomain.ai); the guidance stands whether or not you use the
-product.
+email authentication actually requires, why customers stall, and how to automate publishing the whole set.
+Maintained by [CustomDomain™](https://customdomain.ai). The guidance stands whether or not you use the product.
 
 ## The problem: your activation funnel runs through someone else's DNS console
 
@@ -67,13 +53,12 @@ rather than showing a generic record table. Then subscribe to `connection.live` 
 [app.customdomain.ai/signup](https://app.customdomain.ai/signup); every workspace has a default API key on its
 **API & SDK** page.
 
-## What it does
+## In this guide
 
 - **SPF, DKIM, DMARC, return path and BIMI**, record by record, with exact examples. [docs/01](docs/01-email-authentication-records.md)
 - **The onboarding funnel and its failure modes**: duplicated SPF, doubled host fields, pasted quotes, proxied CNAMEs. [docs/02](docs/02-onboarding-sending-domains.md)
 - **Deliverability and DNS**: DMARC alignment, why a shared bounce domain passes SPF but never aligns. [docs/03](docs/03-deliverability-and-dns.md)
 - **Automating publication** through provider authorization, an API or a widget. [docs/04](docs/04-automating-domain-setup-for-email.md)
-- **Publishes every number with its source**, so you can re-count before trusting it.
 
 ## How it works
 
@@ -84,18 +69,18 @@ A tracking subdomain needs a real certificate, renewed forever, or every link in
 warning.
 
 Getting those records into the customer's zone reduces to three rails. The split below is the live census at
-`GET https://api.customdomain.ai/v1/providers/census`, counted 2026-10-20.
+`GET https://api.customdomain.ai/v1/providers/census`, counted 2026-10-30.
 
-| Rail | Providers (of 178) | What the customer does |
+| Rail | Providers (of 189) | What the customer does |
 |---|---|---|
 | One-click provider authorization | 7 (6 provider OAuth, 1 provider-hosted Domain Connect) | Approves a scoped change set at their own provider |
-| Scoped API token | 55 | Pastes one zone-scoped token |
+| Scoped API token | 66 | Pastes one zone-scoped token |
 | Guided manual with automatic verification | 116 | Copies provider-shaped values; verification is automatic |
 
 Control is proven by whichever rail wrote the records, so there is no separate ownership challenge and no TXT
 token to keep alive. Verification is continuous, not a one-time gate: records that verified once disappear
-during a site migration months later. If you see "178 auto-configured" anywhere, including on our own marketing
-pages, it is wrong.
+during a site migration months later. Of 189 known providers, 73 have an automatic path. Any claim that all of
+them are configured automatically, including on our own pages, is wrong.
 
 ## DNS records for Amazon SES, SendGrid, Postmark and Resend
 
@@ -138,75 +123,63 @@ check CAA before certificate issuance. On the hosted MCP server, `add-email` con
 provider in one call. None of the twenty MCP tools accepts a raw DNS record, so a prompt-injected agent cannot
 end up writing one.
 
-## Repository layout
+## Where this loses
 
-```text
-.
-├── README.md        # the problem, the records, the three rails, pricing
-├── AGENTS.md        # machine-readable brief for coding agents working in this repo
-├── CONTRIBUTING.md  # the sourcing rule: every number traces to a live endpoint
-├── docs/            # 01 authentication records · 02 onboarding funnel
-│                    # 03 deliverability and DNS · 04 automating setup
-└── LICENSE          # MIT
-```
-
-Markdown only, no build step. Surfaces referenced from here: REST at `api.customdomain.ai` (OpenAPI 3.1: 129
-paths, 152 operations, counted 2026-10-20), the widget published as `customdomain-js` on npm, and MCP at
-`mcp.customdomain.ai/mcp` (registry id `ai.customdomain/mcp`).
-
-## Pricing, and where this loses
-
-Read from `GET https://api.customdomain.ai/v1/plans` on 2026-10-20. Entri prices read 2026-08-19.
-
-| | CustomDomain™ | Entri |
-|---|---|---|
-| Entry tier | Starter, $10/mo, 10 connections/yr, hard capped | none published |
-| 600 connections a year | Startup, $149/mo, 600/yr | Startup, $249/mo, 600/yr |
-| Next tier | Growth, $649/mo, 600/yr plus metered overage | Growth, "Talk to Sales", 2,400/yr |
-| Top tiers | Premium and Enterprise, contact sales, 12,000/yr | Premium and Enterprise, "Talk to Sales" |
-
-The self-serve plans start with a 14 day free trial, and a new workspace connects its first ten domains without a
-card. Email templates and the `add-email` tool sit on the `Connect` entitlement, which every plan has;
-Entri lists "advanced security and email domain setup" from its Premium tier. The entitlements that do start
-higher here are `Secure` (the `/v1/ssl*` surface) and `Power` (the reverse proxy), both first appearing on
-Growth. Automatic TLS on a connected host is part of the base flow, not one of those.
+Plan prices and allowances are in the facts block below. Entri, read 2026-08-19, publishes no entry tier and
+charges $249/mo for 600 connections a year, against $149/mo for the same 600 on Startup here. Entri lists
+"advanced security and email domain setup" from its Premium tier. Here the email templates and the `add-email`
+tool are on every plan. HTTPS served by the CustomDomain™ edge, and the certificate endpoints (`/v1/ssl*`), start
+on Growth. On Starter and Startup, domains point at your own servers and you serve TLS.
 
 ## Limits and known gaps
 
-- **Provider coverage.** Entri's plans page advertises "70+ DNS providers". The census here lists 178 catalogued, 62 automatic. The two numbers are not measured the same way and we have not audited theirs, so treat neither as a lead.
+- **Provider coverage.** Entri's plans page advertises "70+ DNS providers". The census here lists 189 known, 73 automatic (2026-10-30). The two numbers are not measured the same way and we have not audited theirs, so treat neither as a lead.
 - **SSO and SCIM are not built**, and no tier grants them. Entri lists Enterprise SSO with SAML and SCIM. If a security questionnaire requires SAML today, this is not the answer.
 - **Drift alerting is off by default.** The hourly monitor sweep runs and `POST /v1/monitor:check` gives the same comparison synchronously, but `domain.record_missing` and `domain.record_restored` are gated behind a deployment flag the hosted service leaves off. Build on the synchronous check.
 - **Starter is for evaluation and small volumes.** It is the only hard-capped tier: past quota it returns `402 quota_exceeded`, and the annual 10 is metered as 1 per calendar month.
 
-## Corrections
+<!-- facts:start -->
+## Facts and sources
 
-Every number here traces to a live endpoint or a public repository, named at the point of use. If one does not,
-that is a bug: open an issue with the file and line, and see [CONTRIBUTING.md](./CONTRIBUTING.md) for the
-sourcing table.
+Read from the live endpoints on 2026-10-30. Every number in this README traces to a row here or to a source named
+where it is used. If one does not, open an issue with the file and line.
 
-Problem framing draws on the [Domain Connect knowledge base](https://github.com/Domain-Connect/knowledge-base)
-(CC0 1.0), an open standard maintained by a community across multiple companies and referenced here as prior
-art.
+| Fact | Value | Source |
+|---|---|---|
+| DNS providers known | 189 | [`/v1/providers/census`](https://api.customdomain.ai/v1/providers/census) |
+| Automatic path | 73: 66 by scoped API key, 6 by provider sign-in (OAuth), 1 by one-click setup (Domain Connect) | census `mode` |
+| Exact records and provider steps | 116 | census `mode` |
+| Going live | No TXT ownership record. A domain goes `live` when every record resolves. Statuses: `pending`, `propagating`, `live`, `failed` | [Connections](https://docs.customdomain.ai/docs/concepts/connections) |
+| HTTPS on the CustomDomain™ edge | Growth and up. On Starter and Startup, domains point at your servers and you serve TLS | [`/v1/plans`](https://api.customdomain.ai/v1/plans) |
+| Plans | Starter $10 a month, 10 domains a year, hard cap. Startup $149 a month, 600 a year. Growth $649 a month, 600 a year. Premium and Enterprise by contract, 12,000 a year. 14 day trial on Starter, Startup and Growth | [`/v1/plans`](https://api.customdomain.ai/v1/plans) |
+| Free to start | A new workspace connects its first ten domains free. No card needed to sign up | [Plans and quotas](https://docs.customdomain.ai/docs/billing/plans-and-quotas) |
+| REST API | 163 operations on 140 paths, OpenAPI 3.1.0 | [`/v1/openapi.json`](https://api.customdomain.ai/v1/openapi.json) |
+| MCP server | `customdomain-mcp` 0.6.0, 20 tools. Buying a domain through MCP is off on the hosted service | [`mcp.json`](https://mcp.customdomain.ai/.well-known/agent/mcp.json) |
+
+Check the provider split yourself:
+
+```sh
+curl -s https://api.customdomain.ai/v1/providers/census \
+  | python3 -c 'import json,sys,collections; d=json.load(sys.stdin); print(d["count"], collections.Counter(p["mode"] for p in d["providers"]))'
+# 189 Counter({'manual': 116, 'api': 66, 'oauth': 6, 'dc': 1})
+```
+<!-- facts:end -->
+
+The sourcing table for corrections is in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Related
 
-- [connect-domain-for-agencies](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-agencies): custom domains for agencies, the field guide
-- [connect-domain-for-ai-agents](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-ai-agents): custom domains for AI agents, the field guide
-- [connect-domain-for-website-builders](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-website-builders): custom domains for website builders, the field guide
-- [customdomain-sdk](https://github.com/CUSTOM-DOMAIN-APP/customdomain-sdk): the browser SDK `customdomain-js` and the React wrapper `@customdomain/react`
 - [customdomain-mcp](https://github.com/CUSTOM-DOMAIN-APP/customdomain-mcp): the hosted MCP server, including the `add-email` tool
-- [docs](https://github.com/CUSTOM-DOMAIN-APP/docs): the CustomDomain™ documentation source, rendered at [docs.customdomain.ai](https://docs.customdomain.ai/docs)
-- [awesome-custom-domains](https://github.com/CUSTOM-DOMAIN-APP/awesome-custom-domains): the curated list of the category, including the alternatives to this product
+- [customdomain-sdk](https://github.com/CUSTOM-DOMAIN-APP/customdomain-sdk): the browser SDK `customdomain-js`, for a connect step inside your onboarding
+- [awesome-custom-domains](https://github.com/CUSTOM-DOMAIN-APP/awesome-custom-domains): the curated list of the category, with its email authentication section
 
-## Support
+## Support and license
 
-- **Docs:** [docs.customdomain.ai](https://docs.customdomain.ai/docs)
-- **Questions and ideas:** [GitHub Discussions](https://github.com/CUSTOM-DOMAIN-APP/docs/discussions)
-- **Bugs and corrections:** [open an issue](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-email-platforms/issues) on this repository
-- **Service status:** [status.customdomain.ai](https://status.customdomain.ai)
-- **Account and billing:** connect@customdomain.ai
-- **Security:** report privately to security@customdomain.ai, never in a public issue. Policy: [app.customdomain.ai/security](https://app.customdomain.ai/security)
+Problem framing draws on the [Domain Connect knowledge base](https://github.com/Domain-Connect/knowledge-base) (CC0 1.0).
 
-## License
+Questions go to [GitHub Discussions](https://github.com/CUSTOM-DOMAIN-APP/docs/discussions) and corrections to
+[this repository's issues](https://github.com/CUSTOM-DOMAIN-APP/connect-domain-for-email-platforms/issues). Account and billing:
+connect@customdomain.ai. Report security issues privately to security@customdomain.ai, never in a public issue
+([policy](https://app.customdomain.ai/security)).
 
 [MIT](./LICENSE). CustomDomain™ is a product of EverJust Company.
