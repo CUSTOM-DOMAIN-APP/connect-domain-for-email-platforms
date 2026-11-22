@@ -1,9 +1,10 @@
-# Custom sending domains for email platforms
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/media/customdomain-mark-dark.png"><img src=".github/media/customdomain-mark.png" alt="CustomDomain" width="56"></picture></p>
+<h1 align="center">Sending domains for email platforms</h1>
+<p align="center"><b>SPF, DKIM, DMARC and MX records for your customers' sending domains, and how to publish them without breaking their mail.</b></p>
+<p align="center"><a href="https://docs.customdomain.ai/docs/dns/bring-your-own-records"><img src="https://img.shields.io/badge/docs-your%20own%20records-1c1917?style=flat" alt="docs"></a> <a href="https://customdomain.ai/gh/email"><img src="https://img.shields.io/badge/website-customdomain.ai-1c1917?style=flat" alt="website"></a> <a href="https://app.customdomain.ai/signup"><img src="https://img.shields.io/badge/start%20free-first%20ten%20domains-1c1917?style=flat" alt="start free"></a> <a href="https://www.producthunt.com/products/custom-domain"><img src="https://img.shields.io/badge/Product%20Hunt-CustomDomain-1c1917?style=flat&logo=producthunt&logoColor=white" alt="Product Hunt"></a></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/media/widget-flow-dark.png"><img src=".github/media/widget-flow-light.png" alt="The CustomDomain widget: your user types their domain, signs in at their provider, and it goes live" width="860"></picture></p>
 
-SPF, DKIM, DMARC, return-path and MX records for Amazon SES, SendGrid, Postmark and Resend, and how to get them
-into a customer's DNS without breaking the mail they already send.
-
-[Email DNS records in the docs](https://customdomain.ai/gh/email) · [Bring your own records](https://docs.customdomain.ai/docs/dns/bring-your-own-records) · [Start free: first ten domains, no card](https://app.customdomain.ai/signup)
+CustomDomain is now built for software products that let their users connect a domain. Start here: [Quickstart](https://docs.customdomain.ai/docs/getting-started/quickstart).
 
 Every email platform hits the same onboarding wall: before a customer's mail is worth delivering, they have to
 publish SPF, DKIM and DMARC records in a DNS console you do not operate. This repository covers which records
